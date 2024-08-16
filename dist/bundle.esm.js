@@ -8691,6 +8691,7 @@ var useGet = function useGet(apiUrlsWithEndpoints) {
     return data;
   };
   var retryOptions = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : {};
+  var authToken = arguments.length > 9 ? arguments[9] : undefined;
   var isMultiple = Array.isArray(apiUrlsWithEndpoints);
 
   // Function to handle data fetching with interceptors and transformation

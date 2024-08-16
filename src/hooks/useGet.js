@@ -24,7 +24,8 @@ export const useGet = (
   cacheOptions = {},
   interceptors = {},
   transformData = (data) => data,
-  retryOptions = {}
+  retryOptions = {},
+  authToken
 ) => {
   const isMultiple = Array.isArray(apiUrlsWithEndpoints);
 
