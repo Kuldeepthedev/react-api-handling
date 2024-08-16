@@ -8456,10 +8456,18 @@ axiosRetry.exponentialDelay = exponentialDelay;
 axiosRetry.linearDelay = linearDelay;
 axiosRetry.isRetryableError = isRetryableError;
 
-// Function to create an Axios instance with a dynamic base URL
+/**
+ * Function to create an Axios instance with a dynamic base URL.
+ * Optionally includes an Authorization header if an authToken is provided.
+ *
+ * @param {string} baseURL - The base URL for the API.
+ * @param {string} [authToken] - Optional authentication token.
+ * @returns {AxiosInstance} - Configured Axios instance.
+ */
 var createApiClient = function createApiClient(baseURL) {
+  var authToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
   var apiClient = axios.create({
-    baseURL: baseURL || process.env.REACT_APP_API_BASE_URL || 'https://your-secure-api.com',
+    baseURL: baseURL,
     timeout: 10000,
     // 10 seconds timeout
     headers: {
@@ -8482,9 +8490,8 @@ var createApiClient = function createApiClient(baseURL) {
 
   // Request Interceptor
   apiClient.interceptors.request.use(function (config) {
-    var token = localStorage.getItem('authToken');
-    if (token) {
-      config.headers.Authorization = "Bearer ".concat(token);
+    if (authToken) {
+      config.headers.Authorization = "Bearer ".concat(authToken);
     }
     console.log('Request:', config);
     return config;
@@ -8521,6 +8528,7 @@ var apiRequest = /*#__PURE__*/function () {
       headers,
       params,
       apiUrl,
+      authToken,
       apiClient,
       response,
       errorData,
@@ -8532,9 +8540,10 @@ var apiRequest = /*#__PURE__*/function () {
           headers = _args.length > 3 && _args[3] !== undefined ? _args[3] : {};
           params = _args.length > 4 && _args[4] !== undefined ? _args[4] : {};
           apiUrl = _args.length > 5 && _args[5] !== undefined ? _args[5] : '';
-          _context.prev = 4;
-          apiClient = createApiClient(apiUrl); // Create apiClient with dynamic base URL
-          _context.next = 8;
+          authToken = _args.length > 6 ? _args[6] : undefined;
+          _context.prev = 5;
+          apiClient = createApiClient(apiUrl, authToken); // Create apiClient with dynamic base URL
+          _context.next = 9;
           return apiClient({
             method: method,
             url: endpoint,
@@ -8543,26 +8552,26 @@ var apiRequest = /*#__PURE__*/function () {
             headers: headers,
             params: params
           });
-        case 8:
+        case 9:
           response = _context.sent;
           return _context.abrupt("return", {
             data: response.data,
             error: null
           });
-        case 12:
-          _context.prev = 12;
-          _context.t0 = _context["catch"](4);
+        case 13:
+          _context.prev = 13;
+          _context.t0 = _context["catch"](5);
           errorData = _context.t0.response ? _context.t0.response.data : _context.t0.message;
           console.error('API Request Error:', errorData);
           return _context.abrupt("return", {
             data: null,
             error: errorData
           });
-        case 17:
+        case 18:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[4, 12]]);
+    }, _callee, null, [[5, 13]]);
   }));
   return function apiRequest(_x, _x2) {
     return _ref.apply(this, arguments);
@@ -8690,7 +8699,7 @@ var useGet = function useGet(apiUrlsWithEndpoints) {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
-            request = apiRequest('GET', url, {}, headers, params);
+            request = apiRequest('GET', url, {}, headers, params, authToken);
             if (interceptors.request) {
               request = interceptors.request(request);
             }
@@ -8829,7 +8838,7 @@ var usePost = function usePost(apiUrlWithEndpoint) {
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              request = apiRequest('POST', apiUrlWithEndpoint, data, headers);
+              request = apiRequest('POST', apiUrlWithEndpoint, data, headers, authToken);
               if (interceptors.request) {
                 request = interceptors.request(request);
               }
@@ -8913,7 +8922,7 @@ var usePut = function usePut(apiUrlWithEndpoint) {
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              request = apiRequest('PUT', apiUrlWithEndpoint, data, headers);
+              request = apiRequest('PUT', apiUrlWithEndpoint, data, headers, authToken);
               if (interceptors.request) {
                 request = interceptors.request(request);
               }
