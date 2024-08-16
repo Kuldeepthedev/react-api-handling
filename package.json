@@ -1,6 +1,6 @@
 {
   "name": "react-api-handling",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A custom React library providing enhanced hooks for API requests.",
   "main": "dist/index.js",
   "module": "index.js",
