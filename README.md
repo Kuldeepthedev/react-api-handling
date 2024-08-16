@@ -69,8 +69,7 @@ export default MyComponent;
 ```
 ## Documentation
 
-```javascript
- react-api-handling``` provides custom hooks to simplify 
+```react-api-handling``` provides custom hooks to simplify 
  API interactions in React. 
  
  This documentation covers the usage of the useGet, usePost, usePut, and useDelete hooks.
@@ -82,7 +81,6 @@ import { useDelete } from 'react-api-handling'```
 ### Function Signature
 
 ```javascript 
- 
   const {
   delete,
   error,
@@ -97,9 +95,7 @@ import { useDelete } from 'react-api-handling'```
   interceptors = {},
   retryOptions = {},
   optimisticUpdate = null
-); 
-
-```
+);```
 
 
 ####  Parameters 
