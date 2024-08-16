@@ -4268,9 +4268,6 @@ var QueryClientContext = React__namespace.createContext(
 );
 var useQueryClient = (queryClient) => {
   const client = React__namespace.useContext(QueryClientContext);
-  if (queryClient) {
-    return queryClient;
-  }
   if (!client) {
     throw new Error("No QueryClient set, use QueryClientProvider to set one");
   }
@@ -4362,7 +4359,7 @@ function useQueries({
   queries,
   ...options
 }, queryClient) {
-  const client = useQueryClient(queryClient);
+  const client = useQueryClient();
   const isRestoring = useIsRestoring();
   const errorResetBoundary = useQueryErrorResetBoundary();
   const defaultedQueries = React__namespace.useMemo(
@@ -4451,7 +4448,7 @@ function useBaseQuery(options, Observer, queryClient) {
       );
     }
   }
-  const client = useQueryClient(queryClient);
+  const client = useQueryClient();
   const isRestoring = useIsRestoring();
   const errorResetBoundary = useQueryErrorResetBoundary();
   const defaultedOptions = client.defaultQueryOptions(options);
@@ -4503,11 +4500,11 @@ function useBaseQuery(options, Observer, queryClient) {
 }
 
 function useQuery(options, queryClient) {
-  return useBaseQuery(options, QueryObserver, queryClient);
+  return useBaseQuery(options, QueryObserver);
 }
 
 function useMutation(options, queryClient) {
-  const client = useQueryClient(queryClient);
+  const client = useQueryClient();
   const [observer] = React__namespace.useState(
     () => new MutationObserver(
       client,
@@ -4540,9 +4537,7 @@ function useMutation(options, queryClient) {
 function useInfiniteQuery(options, queryClient) {
   return useBaseQuery(
     options,
-    InfiniteQueryObserver,
-    queryClient
-  );
+    InfiniteQueryObserver);
 }
 
 function bind(fn, thisArg) {
@@ -8614,37 +8609,39 @@ var useDelete = function useDelete(apiUrlWithEndpoint) {
   var retryOptions = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
   var optimisticUpdate = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
   var queryClient = useQueryClient();
-  var mutation = useMutation( /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(params) {
-      var request, response;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            request = apiRequest('DELETE', apiUrlWithEndpoint, {}, headers, params);
-            if (interceptors.request) {
-              request = interceptors.request(request);
-            }
-            _context.next = 4;
-            return request;
-          case 4:
-            response = _context.sent;
-            if (!interceptors.response) {
-              _context.next = 7;
-              break;
-            }
-            return _context.abrupt("return", interceptors.response(response));
-          case 7:
-            return _context.abrupt("return", response);
-          case 8:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee);
-    }));
-    return function (_x) {
-      return _ref.apply(this, arguments);
-    };
-  }(), {
+  var mutation = useMutation({
+    mutationFn: function () {
+      var _mutationFn = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(params) {
+        var request, response;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              request = apiRequest('DELETE', apiUrlWithEndpoint, {}, headers, params);
+              if (interceptors.request) {
+                request = interceptors.request(request);
+              }
+              _context.next = 4;
+              return request;
+            case 4:
+              response = _context.sent;
+              if (!interceptors.response) {
+                _context.next = 7;
+                break;
+              }
+              return _context.abrupt("return", interceptors.response(response));
+            case 7:
+              return _context.abrupt("return", response);
+            case 8:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }));
+      function mutationFn(_x) {
+        return _mutationFn.apply(this, arguments);
+      }
+      return mutationFn;
+    }(),
     onSuccess: function onSuccess(data) {
       if (queryKey) {
         queryClient.invalidateQueries(queryKey);
@@ -8675,6 +8672,7 @@ var useDelete = function useDelete(apiUrlWithEndpoint) {
     data: mutation.data
   };
 };
+
 // In your src/hooks/useDelete.js
 console.log('useDelete module loaded');
 
@@ -8738,59 +8736,64 @@ var useGet = function useGet(apiUrlsWithEndpoints) {
     };
   }();
   if (isMultiple) {
-    var _queryResult$find;
+    var _queryResults$find;
     // Handle multiple URLs with batching
-    var _queryResult = useQueries(apiUrlsWithEndpoints.map(function (url) {
-      return _objectSpread2(_objectSpread2({
-        queryKey: [url, params],
-        queryFn: function queryFn() {
-          return fetchData(url, params);
-        }
-      }, queryOptions), {}, {
-        cacheTime: cacheOptions.cacheTime,
-        staleTime: cacheOptions.staleTime,
-        retry: retryOptions.retryCount,
-        retryDelay: retryOptions.retryDelay
-      });
-    }));
+    var queryResults = useQueries({
+      queries: apiUrlsWithEndpoints.map(function (url) {
+        return _objectSpread2({
+          queryKey: [url, params],
+          queryFn: function queryFn() {
+            return fetchData(url, params);
+          },
+          cacheTime: cacheOptions.cacheTime,
+          staleTime: cacheOptions.staleTime,
+          retry: retryOptions.retryCount,
+          retryDelay: retryOptions.retryDelay
+        }, queryOptions);
+      })
+    });
     return {
       fetchData: function fetchData() {
-        return _queryResult.map(function (result) {
+        return queryResults.map(function (result) {
           return result.refetch();
         });
       },
-      error: (_queryResult$find = _queryResult.find(function (result) {
+      error: (_queryResults$find = queryResults.find(function (result) {
         return result.isError;
-      })) === null || _queryResult$find === void 0 ? void 0 : _queryResult$find.error,
-      isLoading: _queryResult.some(function (result) {
+      })) === null || _queryResults$find === void 0 ? void 0 : _queryResults$find.error,
+      isLoading: queryResults.some(function (result) {
         return result.isLoading;
       }),
-      isSuccess: _queryResult.every(function (result) {
+      isSuccess: queryResults.every(function (result) {
         return result.isSuccess;
       }),
-      data: _queryResult.map(function (result) {
+      data: queryResults.map(function (result) {
         return result.data;
       })
     };
   }
 
   // Handle single URL
-  var queryResult = useQuery([apiUrlsWithEndpoints, params], function () {
-    return fetchData(apiUrlsWithEndpoints, params);
-  }, _objectSpread2(_objectSpread2({}, queryOptions), {}, {
+  var queryConfig = _objectSpread2({
+    queryKey: [apiUrlsWithEndpoints, params],
+    queryFn: function queryFn() {
+      return fetchData(apiUrlsWithEndpoints, params);
+    },
     cacheTime: cacheOptions.cacheTime,
     staleTime: cacheOptions.staleTime,
     retry: retryOptions.retryCount,
     retryDelay: retryOptions.retryDelay
-  }));
+  }, queryOptions);
   if (paginationOptions.isInfinite) {
-    var infiniteQueryResult = useInfiniteQuery([apiUrlsWithEndpoints, params], function (_ref2) {
-      var _ref2$pageParam = _ref2.pageParam,
-        pageParam = _ref2$pageParam === void 0 ? 1 : _ref2$pageParam;
-      return fetchData(apiUrlsWithEndpoints, _objectSpread2(_objectSpread2({}, params), {}, {
-        page: pageParam
-      }));
-    }, _objectSpread2(_objectSpread2(_objectSpread2({}, queryOptions), paginationOptions), {}, {
+    var infiniteQueryConfig = _objectSpread2(_objectSpread2({
+      queryKey: [apiUrlsWithEndpoints, params],
+      queryFn: function queryFn(_ref2) {
+        var _ref2$pageParam = _ref2.pageParam,
+          pageParam = _ref2$pageParam === void 0 ? 1 : _ref2$pageParam;
+        return fetchData(apiUrlsWithEndpoints, _objectSpread2(_objectSpread2({}, params), {}, {
+          page: pageParam
+        }));
+      },
       getNextPageParam: function getNextPageParam(lastPage) {
         var _lastPage$nextPage;
         return (_lastPage$nextPage = lastPage.nextPage) !== null && _lastPage$nextPage !== void 0 ? _lastPage$nextPage : false;
@@ -8799,7 +8802,8 @@ var useGet = function useGet(apiUrlsWithEndpoints) {
       staleTime: cacheOptions.staleTime,
       retry: retryOptions.retryCount,
       retryDelay: retryOptions.retryDelay
-    }));
+    }, queryOptions), paginationOptions);
+    var infiniteQueryResult = useInfiniteQuery(infiniteQueryConfig);
     return {
       fetchData: infiniteQueryResult.refetch,
       error: infiniteQueryResult.error,
@@ -8808,6 +8812,7 @@ var useGet = function useGet(apiUrlsWithEndpoints) {
       data: infiniteQueryResult.data
     };
   }
+  var queryResult = useQuery(queryConfig);
   return {
     fetchData: queryResult.refetch,
     error: queryResult.error,
@@ -8837,37 +8842,39 @@ var usePost = function usePost(apiUrlWithEndpoint) {
   var retryOptions = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
   var optimisticUpdate = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
   var queryClient = useQueryClient();
-  var mutation = useMutation( /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(data) {
-      var request, response;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            request = apiRequest('POST', apiUrlWithEndpoint, data, headers);
-            if (interceptors.request) {
-              request = interceptors.request(request);
-            }
-            _context.next = 4;
-            return request;
-          case 4:
-            response = _context.sent;
-            if (!interceptors.response) {
-              _context.next = 7;
-              break;
-            }
-            return _context.abrupt("return", interceptors.response(response));
-          case 7:
-            return _context.abrupt("return", response);
-          case 8:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee);
-    }));
-    return function (_x) {
-      return _ref.apply(this, arguments);
-    };
-  }(), {
+  var mutation = useMutation({
+    mutationFn: function () {
+      var _mutationFn = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(data) {
+        var request, response;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              request = apiRequest('POST', apiUrlWithEndpoint, data, headers);
+              if (interceptors.request) {
+                request = interceptors.request(request);
+              }
+              _context.next = 4;
+              return request;
+            case 4:
+              response = _context.sent;
+              if (!interceptors.response) {
+                _context.next = 7;
+                break;
+              }
+              return _context.abrupt("return", interceptors.response(response));
+            case 7:
+              return _context.abrupt("return", response);
+            case 8:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }));
+      function mutationFn(_x) {
+        return _mutationFn.apply(this, arguments);
+      }
+      return mutationFn;
+    }(),
     onSuccess: function onSuccess(data) {
       if (queryKey) {
         queryClient.invalidateQueries(queryKey);
@@ -8919,37 +8926,39 @@ var usePut = function usePut(apiUrlWithEndpoint) {
   var retryOptions = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
   var optimisticUpdate = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
   var queryClient = useQueryClient();
-  var mutation = useMutation( /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(data) {
-      var request, response;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            request = apiRequest('PUT', apiUrlWithEndpoint, data, headers);
-            if (interceptors.request) {
-              request = interceptors.request(request);
-            }
-            _context.next = 4;
-            return request;
-          case 4:
-            response = _context.sent;
-            if (!interceptors.response) {
-              _context.next = 7;
-              break;
-            }
-            return _context.abrupt("return", interceptors.response(response));
-          case 7:
-            return _context.abrupt("return", response);
-          case 8:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee);
-    }));
-    return function (_x) {
-      return _ref.apply(this, arguments);
-    };
-  }(), {
+  var mutation = useMutation({
+    mutationFn: function () {
+      var _mutationFn = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(data) {
+        var request, response;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              request = apiRequest('PUT', apiUrlWithEndpoint, data, headers);
+              if (interceptors.request) {
+                request = interceptors.request(request);
+              }
+              _context.next = 4;
+              return request;
+            case 4:
+              response = _context.sent;
+              if (!interceptors.response) {
+                _context.next = 7;
+                break;
+              }
+              return _context.abrupt("return", interceptors.response(response));
+            case 7:
+              return _context.abrupt("return", response);
+            case 8:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }));
+      function mutationFn(_x) {
+        return _mutationFn.apply(this, arguments);
+      }
+      return mutationFn;
+    }(),
     onSuccess: function onSuccess(data) {
       if (queryKey) {
         queryClient.invalidateQueries(queryKey);
