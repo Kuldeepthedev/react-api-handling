@@ -64,7 +64,7 @@ ReactDOM.render(
 ```
 ```javascript
 import React from 'react';
-import { useApi } from 'react-api-handling';
+import { useGet } from 'react-api-handling';
 
 const MyComponent = () => {
   const { data, error, loading } = useApi('https://api.example.com/data');
