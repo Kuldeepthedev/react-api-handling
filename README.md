@@ -74,14 +74,11 @@ export default MyComponent;
  
  This documentation covers the usage of the useGet, usePost, usePut, and useDelete hooks.
 
+import { useDelete } from 'react-api-handling'; ```
 
-```javascript 
-import { useDelete } from 'react-api-handling'```
-
-### Function Signature
-
-```javascript 
-  const {
+### Function Signature 
+ ```javascript 
+const {
   delete,
   error,
   isLoading,
@@ -95,8 +92,8 @@ import { useDelete } from 'react-api-handling'```
   interceptors = {},
   retryOptions = {},
   optimisticUpdate = null
-);```
-
+);
+```
 
 ####  Parameters 
 
