@@ -248,7 +248,7 @@ retryDelay (number): Delay between retries in milliseconds. Default is 1000.
 
 ```javascript
 import React from 'react';
-import { useGet } from 'your-library';
+import { useGet } from 'react-api-handling';
 
 const MyComponent = () => {
   const {
@@ -279,7 +279,7 @@ export default MyComponent;
 
 ```javascript
 import React from 'react';
-import { useGet } from 'your-library';
+import { useGet } from 'react-api-handling';
 
 const MyComponent = () => {
   const {
@@ -314,7 +314,7 @@ export default MyComponent;
 
 ```javascript 
 import React from 'react';
-import { useGet } from 'your-library';
+import { useGet } from 'react-api-handling';
 
 const MyComponent = () => {
   const {
