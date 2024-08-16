@@ -26,7 +26,7 @@ export const usePut = (
 
   const mutation = useMutation({
     mutationFn: async (data) => {
-      let request = apiRequest('PUT', apiUrlWithEndpoint, data, headers);
+      let request = apiRequest('PUT', apiUrlWithEndpoint, data, headers,authToken);
       if (interceptors.request) {
         request = interceptors.request(request);
       }

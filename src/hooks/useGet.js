@@ -30,7 +30,7 @@ export const useGet = (
 
   // Function to handle data fetching with interceptors and transformation
   const fetchData = async (url, params) => {
-    let request = apiRequest('GET', url, {}, headers, params);
+    let request = apiRequest('GET', url, {}, headers, params,authToken);
     if (interceptors.request) {
       request = interceptors.request(request);
     }

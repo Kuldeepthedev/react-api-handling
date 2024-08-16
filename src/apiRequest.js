@@ -11,9 +11,9 @@ import { createApiClient } from './apiClient.js';
  * @param {string} [apiUrl=''] - The base API URL.
  * @return {Promise<Object>} - A Promise that resolves to an object with the response data and error.
  */
-export const apiRequest = async (method, endpoint, data = {}, headers = {}, params = {}, apiUrl = '') => {
+export const apiRequest = async (method, endpoint, data = {}, headers = {}, params = {}, apiUrl = '',authToken) => {
   try {
-    const apiClient = createApiClient(apiUrl); // Create apiClient with dynamic base URL
+    const apiClient = createApiClient(apiUrl,authToken); // Create apiClient with dynamic base URL
     const response = await apiClient({
       method,
       url: endpoint, // Endpoint is relative to baseURL

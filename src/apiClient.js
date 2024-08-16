@@ -1,10 +1,17 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-// Function to create an Axios instance with a dynamic base URL
-export const createApiClient = (baseURL) => {
+/**
+ * Function to create an Axios instance with a dynamic base URL.
+ * Optionally includes an Authorization header if an authToken is provided.
+ *
+ * @param {string} baseURL - The base URL for the API.
+ * @param {string} [authToken] - Optional authentication token.
+ * @returns {AxiosInstance} - Configured Axios instance.
+ */
+export const createApiClient = (baseURL, authToken = null) => {
   const apiClient = axios.create({
-    baseURL: baseURL || process.env.REACT_APP_API_BASE_URL || 'https://your-secure-api.com',
+    baseURL: baseURL,
     timeout: 10000, // 10 seconds timeout
     headers: {
       'Content-Type': 'application/json',
@@ -24,9 +31,11 @@ export const createApiClient = (baseURL) => {
   // Request Interceptor
   apiClient.interceptors.request.use(
     (config) => {
-      const token = localStorage.getItem('authToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      if (authToken) {
+        config.headers.Authorization = `Bearer ${authToken}`;
+      } else {
+        // Optional: Handle cases where no auth token is provided
+        // config.headers.Authorization = undefined; // Ensure it's not set if not provided
       }
       console.log('Request:', config);
       return config;
