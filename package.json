@@ -5,9 +5,7 @@
   "main": "dist/index.js",
   "module": "index.js",
   "type": "module",
-  "files": [
-    "index.js"
-  ],
+  
   "scripts": {
     "test": "jest",
     "build": "webpack",
