@@ -21,8 +21,13 @@ const queryClient = new QueryClient({
  * @param {React.PropsWithChildren} props - The component props.
  * @returns {React.ReactElement} - The QueryClientProvider element.
  */
-export const QueryClientProvider = ({ children }) => {
-  return (<ReactQueryClientProvider client={queryClient}>{children}</ReactQueryClientProvider>);
+export const QueryClientProvider = (props) => {
+  // Use React.createElement to create the ReactQueryClientProvider element
+  return React.createElement(
+    ReactQueryClientProvider,
+    { client: queryClient },
+    props.children
+  );
 };
 
-export  {queryClient};
+export { queryClient };
