@@ -1,0 +1,54 @@
+{
+  "name": "react-api-handling",
+  "version": "1.0.0",
+  "description": "A custom React library providing enhanced hooks for API requests.",
+  "main": "index.js",
+  "module": "index.js",
+  "type": "module",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"No build step defined\"",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "react-query",
+    "hooks",
+    "api",
+    "custom-hooks",
+    "api-handling",
+    "react-api-handling"
+  ],
+  "author": "Your Kuldeep Kumar",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kuldeepthedev/react-api-handling.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Kuldeepthedev/react-api-handling.git/issues"
+  },
+  "homepage": "https://github.com/Kuldeepthedev/react-api-handling.git#readme",
+  "dependencies": {
+    "react": "^18.3.1",
+    "zest": "^0.1.3",
+    "react-query": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/preset-react": "^7.24.7",
+    "babel-loader": "^9.1.3",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.9.0",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "react-query": "^4.0.0",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
