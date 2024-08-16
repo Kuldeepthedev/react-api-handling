@@ -27,6 +27,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+    alias: {
+      '@tanstack/react-query': require.resolve('@tanstack/react-query'),
+    },
+
   },
   externals: {
     react: 'react',
