@@ -39,15 +39,15 @@ Open your terminal and navigate to your React project directory.
 
 Install the react-api-handling library using Yarn:    
 
-```bash
+```javascript
  yarn add react-api-handling
 ```
 ## Demo
 
-```bash
+```javascript
   import { useGet } from 'react-api-handling';
 ```
-```bash
+```javascript
 import React from 'react';
 import { useApi } from 'react-api-handling';
 
@@ -69,17 +69,20 @@ export default MyComponent;
 ```
 ## Documentation
 
-```react-api-handling``` provides custom hooks to simplify 
+```javascript
+ react-api-handling``` provides custom hooks to simplify 
  API interactions in React. 
  
  This documentation covers the usage of the useGet, usePost, usePut, and useDelete hooks.
 
 
-```import { useDelete } from 'react-api-handling'```
+```javascript 
+import { useDelete } from 'react-api-handling'```
 
 ### Function Signature
 
-```bash 
+```javascript 
+ 
   const {
   delete,
   error,
@@ -135,7 +138,7 @@ The hook returns an object with the following properties:
 
 #### Example Usage 
 
-```
+```javascript
 import React from 'react';
 import { useDelete } from 'react-api-handling';
 
