@@ -1,9 +1,9 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { useDelete } from '../../src/hooks/useDelete';
-import { QueryClientProvider } from '../../src/QueryClientProvider';
-import { apiRequest } from '../../src/apiRequest';
+import { renderHook, act } from '@testing-library/react';
+import { useDelete } from '../../src/hooks/useDelete.js';
+import { QueryClientProvider } from '../../src/queryClient.js';
+import { apiRequest } from '../../src/apiRequest.js';
 
-jest.mock('../../src/apiRequest');
+jest.mock('../../src/apiRequest.js');
 
 describe('useDelete', () => {
   it('should perform a delete request and handle loading and error states', async () => {

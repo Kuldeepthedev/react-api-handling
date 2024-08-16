@@ -1,4 +1,4 @@
-import { useQuery, useInfiniteQuery, useQueries } from 'react-query';
+import { useQuery, useInfiniteQuery, useQueries } from '@tanstack/react-query';
 import { apiRequest } from '../apiRequest.js';
 
 /**

@@ -9,7 +9,7 @@
     "index.js"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "webpack",
     "prepublishOnly": "npm run build"
   },
@@ -33,9 +33,11 @@
   },
   "homepage": "https://github.com/Kuldeepthedev/react-api-handling.git#readme",
   "dependencies": {
+    "@tanstack/react-query": "^5.51.23",
+    "@testing-library/react": "^16.0.0",
     "axios-retry": "^4.5.0",
     "react": "^18.3.1",
-    "react-query": "^4.0.0",
+    "use-sync-external-store": "^1.2.2",
     "zest": "^0.1.3"
   },
   "devDependencies": {
@@ -48,6 +50,8 @@
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "react-query": "^4.0.0",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4"

@@ -1,7 +1,7 @@
-import { apiRequest } from '../src/apiRequest';
-import apiClient from '../src/apiClient';
+import { apiRequest } from '../src/apiRequest.js';
+import apiClient from '../src/apiClient.js';
 
-jest.mock('../src/apiClient');
+jest.mock('../src/apiClient.js');
 
 describe('apiRequest', () => {
   it('should make a successful API call and return data', async () => {

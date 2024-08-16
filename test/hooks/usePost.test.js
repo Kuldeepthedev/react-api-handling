@@ -1,9 +1,9 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { usePost } from '../../src/hooks/usePost';
-import { QueryClientProvider } from '../../src/QueryClientProvider';
-import { apiRequest } from '../../src/apiRequest';
+import { renderHook, act } from '@testing-library/react';
+import { usePost } from '../../src/hooks/usePost.js';
+import { QueryClientProvider } from '../../src/QueryClientProvider.js';
+import { apiRequest } from '../../src/apiRequest.js';
 
-jest.mock('../../src/apiRequest');
+jest.mock('../../src/apiRequest.js');
 
 describe('usePost', () => {
   it('should perform a post request and handle loading and error states', async () => {

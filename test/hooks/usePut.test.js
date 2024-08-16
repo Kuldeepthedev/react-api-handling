@@ -1,9 +1,9 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { usePut } from '../../src/hooks/usePut';
-import { QueryClientProvider } from '../../src/QueryClientProvider';
-import { apiRequest } from '../../src/apiRequest';
+import { renderHook, act } from '@testing-library/react';
+import { usePut } from '../../src/hooks/usePut.js';
+import { QueryClientProvider } from '../../src/queryClient.js';
+import { apiRequest } from '../../src/apiRequest.js';
 
-jest.mock('../../src/apiRequest');
+jest.mock('../../src/apiRequest.js');
 
 describe('usePut', () => {
   it('should perform a put request and handle loading and error states', async () => {

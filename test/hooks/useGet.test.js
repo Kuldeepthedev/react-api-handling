@@ -1,9 +1,9 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { useGet } from '../../src/hooks/useGet';
-import { QueryClientProvider } from '../../src/QueryClientProvider';
-import { apiRequest } from '../../src/apiRequest';
+import { renderHook, act } from '@testing-library/react';
+import { useGet } from '../../src/hooks/useGet.js';
+import { QueryClientProvider } from '../../src/QueryClientProvider.js';
+import { apiRequest } from '../../src/apiRequest.js';
 
-jest.mock('../../src/apiRequest');
+jest.mock('../../src/apiRequest.js');
 
 describe('useGet', () => {
   it('should fetch data and handle loading and error states', async () => {
