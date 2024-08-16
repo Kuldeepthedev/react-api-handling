@@ -67,3 +67,5 @@ export const useDelete = (
     data: mutation.data,
   };
 };
+// In your src/hooks/useDelete.js
+console.log('useDelete module loaded');

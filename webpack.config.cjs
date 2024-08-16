@@ -6,17 +6,22 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
-    library: 'react-api-handling',
+    library: 'reactApiHandling',
     libraryTarget: 'umd',
-    globalObject: 'this'
+    globalObject: 'this',
+    umdNamedDefine: true // Optional: names your module when using AMD
   },
+  devtool: 'source-map',
   module: {
     rules: [
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          }
         }
       }
     ]
@@ -25,7 +30,6 @@ module.exports = {
     extensions: ['.js', '.jsx']
   },
   externals: {
-    react: 'react',
-    '@tanstack/react-query': '@tanstack/react-query'
+    react: 'react' // Exclude React from the bundle
   }
 };
