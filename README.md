@@ -180,3 +180,174 @@ const MyComponent = () => {
 
 export default MyComponent;
 ```
+
+
+
+
+```import { useGet } from 'react-api-handling'```
+
+### Function Signature
+
+```javascript 
+ const {
+  fetchData,
+  error,
+  isLoading,
+  isSuccess,
+  data
+} = useGet(
+  apiUrlsWithEndpoints,
+  params = {},
+  headers = {},
+  queryOptions = {},
+  paginationOptions = {},
+  cacheOptions = {},
+  interceptors = {},
+  transformData = (data) => data,
+  retryOptions = {}
+); 
+
+```
+
+
+####  Parameters 
+
+```apiUrlsWithEndpoints (string | string[])```
+: The full URL or an array of URLs for the API including the endpoint(s). This is required.
+
+```params (Object, optional)```: Optional query parameters to include in the GET request.
+
+```headers (Object, optional)```: Optional headers to include in the GET request.
+
+```queryOptions (Object, optional)```: Optional configuration for the query, such as enabled, refetchOnWindowFocus, etc.
+
+```paginationOptions (Object, options```: Options for handling pagination or infinite queries. Includes:
+
+```isInfinite (boolean)```: Whether to use infinite scrolling.
+
+```getNextPageParam (function)```: Function to determine the next page parameter for infinite queries.
+
+```cacheOptions (Object, optional)```: Custom cache and stale time options.
+
+```cacheTime (number)```: Time (in milliseconds) to keep the data in cache.
+
+```staleTime (number)```: Time (in milliseconds) after which the data is considered stale.
+
+```interceptors (Object, optional)```: Contains request and response interceptors. Functions to modify the request before it is sent and handle the response after it is received.
+
+```transformData (function, optional)```: Function to transform or normalize the fetched data. The function receives the data and should return the transformed data.
+
+```retryOptions (Object, optional)```: Custom retry and backoff strategies.
+
+```retryCount (number)```: Number of retry attempts. Default is 3.
+retryDelay (number): Delay between retries in milliseconds. Default is 1000. 
+
+#### Example Usage 
+
+##### Single URL with Basic Query
+
+```javascript
+import React from 'react';
+import { useGet } from 'your-library';
+
+const MyComponent = () => {
+  const {
+    fetchData,
+    error,
+    isLoading,
+    isSuccess,
+    data
+  } = useGet('https://your-secure-api.com/api/data', { param1: 'value1' });
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (isSuccess) return <p>Data: {JSON.stringify(data)}</p>;
+
+  return (
+    <div>
+      <button onClick={fetchData}>Refresh Data</button>
+    </div>
+  );
+};
+
+export default MyComponent;
+
+```
+
+
+##### Multiple URLs with Batching
+
+```javascript
+import React from 'react';
+import { useGet } from 'your-library';
+
+const MyComponent = () => {
+  const {
+    fetchData,
+    error,
+    isLoading,
+    isSuccess,
+    data
+  } = useGet(
+    ['https://your-secure-api.com/api/data1', 'https://your-secure-api.com/api/data2'],
+    { param1: 'value1' }
+  );
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (isSuccess) return (
+    <div>
+      <p>Data 1: {JSON.stringify(data[0])}</p>
+      <p>Data 2: {JSON.stringify(data[1])}</p>
+    </div>
+  );
+
+  return null;
+};
+
+export default MyComponent;
+
+
+```
+
+#### Infinite Query with Pagination 
+
+```javascript 
+import React from 'react';
+import { useGet } from 'your-library';
+
+const MyComponent = () => {
+  const {
+    fetchData,
+    error,
+    isLoading,
+    isSuccess,
+    data,
+  } = useGet(
+    'https://your-secure-api.com/api/data',
+    { param1: 'value1' },
+    {},
+    {},
+    { isInfinite: true, getNextPageParam: (lastPage) => lastPage.nextPage }
+  );
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (isSuccess) return (
+    <div>
+      {data.pages.map((page, index) => (
+        <div key={index}>
+          {page.items.map(item => (
+            <p key={item.id}>{item.name}</p>
+          ))}
+        </div>
+      ))}
+      <button onClick={fetchData}>Load More</button>
+    </div>
+  );
+
+  return null;
+};
+
+export default MyComponent;
+```
