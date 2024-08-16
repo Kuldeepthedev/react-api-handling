@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { apiRequest } from '../apiRequest';
+import { apiRequest } from '../apiRequest.js';
 
 /**
  * Custom hook for performing POST requests with advanced features.

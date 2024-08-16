@@ -1,8 +1,8 @@
 {
   "name": "react-api-handling",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A custom React library providing enhanced hooks for API requests.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "module": "index.js",
   "type": "module",
   "files": [
@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo \"No build step defined\"",
+    "build": "webpack",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

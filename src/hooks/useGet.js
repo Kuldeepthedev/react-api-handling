@@ -1,5 +1,5 @@
 import { useQuery, useInfiniteQuery, useQueries } from 'react-query';
-import { apiRequest } from '../apiRequest';
+import { apiRequest } from '../apiRequest.js';
 
 /**
  * Custom hook for performing GET requests with advanced features.

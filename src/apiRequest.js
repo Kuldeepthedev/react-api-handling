@@ -1,4 +1,4 @@
-import { createApiClient } from './apiClient';
+import { createApiClient } from './apiClient.js';
 
 /**
  * Makes an API request using the provided method, endpoint, data, headers, and params.
