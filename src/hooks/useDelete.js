@@ -24,8 +24,8 @@ export const useDelete = (
 ) => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation(
-    async (params) => {
+  const mutation = useMutation({
+    mutationFn: async (params) => {
       let request = apiRequest('DELETE', apiUrlWithEndpoint, {}, headers, params);
       if (interceptors.request) {
         request = interceptors.request(request);
@@ -36,28 +36,26 @@ export const useDelete = (
       }
       return response;
     },
-    {
-      onSuccess: (data) => {
-        if (queryKey) {
-          queryClient.invalidateQueries(queryKey);
-        }
-        if (optimisticUpdate) {
-          optimisticUpdate(data);
-        }
-      },
-      onError: (error) => {
-        console.error('Delete Request Error:', error);
-      },
-      retry: retryOptions.retryCount ?? 3, // Default retry count
-      retryDelay: retryOptions.retryDelay ?? 1000, // Default retry delay
-      onMutate: () => {
-        // Optionally, handle optimistic updates before the request completes
-        if (optimisticUpdate) {
-          optimisticUpdate();
-        }
+    onSuccess: (data) => {
+      if (queryKey) {
+        queryClient.invalidateQueries(queryKey);
+      }
+      if (optimisticUpdate) {
+        optimisticUpdate(data);
+      }
+    },
+    onError: (error) => {
+      console.error('Delete Request Error:', error);
+    },
+    retry: retryOptions.retryCount ?? 3, // Default retry count
+    retryDelay: retryOptions.retryDelay ?? 1000, // Default retry delay
+    onMutate: () => {
+      // Optionally, handle optimistic updates before the request completes
+      if (optimisticUpdate) {
+        optimisticUpdate();
       }
     }
-  );
+  });
 
   return {
     delete: mutation.mutate,
@@ -67,5 +65,6 @@ export const useDelete = (
     data: mutation.data,
   };
 };
+
 // In your src/hooks/useDelete.js
 console.log('useDelete module loaded');

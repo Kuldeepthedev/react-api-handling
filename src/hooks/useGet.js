@@ -43,54 +43,52 @@ export const useGet = (
 
   if (isMultiple) {
     // Handle multiple URLs with batching
-    const queryResult = useQueries(
-      apiUrlsWithEndpoints.map((url) => ({
+    const queryResults = useQueries({
+      queries: apiUrlsWithEndpoints.map((url) => ({
         queryKey: [url, params],
         queryFn: () => fetchData(url, params),
-        ...queryOptions,
         cacheTime: cacheOptions.cacheTime,
         staleTime: cacheOptions.staleTime,
         retry: retryOptions.retryCount,
         retryDelay: retryOptions.retryDelay,
-      }))
-    );
+        ...queryOptions,
+      })),
+    });
 
     return {
-      fetchData: () => queryResult.map(result => result.refetch()),
-      error: queryResult.find(result => result.isError)?.error,
-      isLoading: queryResult.some(result => result.isLoading),
-      isSuccess: queryResult.every(result => result.isSuccess),
-      data: queryResult.map(result => result.data),
+      fetchData: () => queryResults.map(result => result.refetch()),
+      error: queryResults.find(result => result.isError)?.error,
+      isLoading: queryResults.some(result => result.isLoading),
+      isSuccess: queryResults.every(result => result.isSuccess),
+      data: queryResults.map(result => result.data),
     };
   }
 
   // Handle single URL
-  const queryResult = useQuery(
-    [apiUrlsWithEndpoints, params],
-    () => fetchData(apiUrlsWithEndpoints, params),
-    {
-      ...queryOptions,
+  const queryConfig = {
+    queryKey: [apiUrlsWithEndpoints, params],
+    queryFn: () => fetchData(apiUrlsWithEndpoints, params),
+    cacheTime: cacheOptions.cacheTime,
+    staleTime: cacheOptions.staleTime,
+    retry: retryOptions.retryCount,
+    retryDelay: retryOptions.retryDelay,
+    ...queryOptions,
+  };
+
+  if (paginationOptions.isInfinite) {
+    const infiniteQueryConfig = {
+      queryKey: [apiUrlsWithEndpoints, params],
+      queryFn: ({ pageParam = 1 }) => fetchData(apiUrlsWithEndpoints, { ...params, page: pageParam }),
+      getNextPageParam: (lastPage) => lastPage.nextPage ?? false,
       cacheTime: cacheOptions.cacheTime,
       staleTime: cacheOptions.staleTime,
       retry: retryOptions.retryCount,
       retryDelay: retryOptions.retryDelay,
-    }
-  );
+      ...queryOptions,
+      ...paginationOptions,
+    };
 
-  if (paginationOptions.isInfinite) {
-    const infiniteQueryResult = useInfiniteQuery(
-      [apiUrlsWithEndpoints, params],
-      ({ pageParam = 1 }) => fetchData(apiUrlsWithEndpoints, { ...params, page: pageParam }),
-      {
-        ...queryOptions,
-        ...paginationOptions,
-        getNextPageParam: (lastPage) => lastPage.nextPage ?? false,
-        cacheTime: cacheOptions.cacheTime,
-        staleTime: cacheOptions.staleTime,
-        retry: retryOptions.retryCount,
-        retryDelay: retryOptions.retryDelay,
-      }
-    );
+    const infiniteQueryResult = useInfiniteQuery(infiniteQueryConfig);
 
     return {
       fetchData: infiniteQueryResult.refetch,
@@ -100,6 +98,8 @@ export const useGet = (
       data: infiniteQueryResult.data,
     };
   }
+
+  const queryResult = useQuery(queryConfig);
 
   return {
     fetchData: queryResult.refetch,

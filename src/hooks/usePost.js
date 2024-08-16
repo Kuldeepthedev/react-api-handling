@@ -24,8 +24,8 @@ export const usePost = (
 ) => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation(
-    async (data) => {
+  const mutation = useMutation({
+    mutationFn: async (data) => {
       let request = apiRequest('POST', apiUrlWithEndpoint, data, headers);
       if (interceptors.request) {
         request = interceptors.request(request);
@@ -36,28 +36,26 @@ export const usePost = (
       }
       return response;
     },
-    {
-      onSuccess: (data) => {
-        if (queryKey) {
-          queryClient.invalidateQueries(queryKey);
-        }
-        if (optimisticUpdate) {
-          optimisticUpdate(data);
-        }
-      },
-      onError: (error) => {
-        console.error('Post Request Error:', error);
-      },
-      retry: retryOptions.retryCount ?? 3, // Default retry count
-      retryDelay: retryOptions.retryDelay ?? 1000, // Default retry delay
-      onMutate: () => {
-        // Optionally, handle optimistic updates before the request completes
-        if (optimisticUpdate) {
-          optimisticUpdate();
-        }
+    onSuccess: (data) => {
+      if (queryKey) {
+        queryClient.invalidateQueries(queryKey);
+      }
+      if (optimisticUpdate) {
+        optimisticUpdate(data);
+      }
+    },
+    onError: (error) => {
+      console.error('Post Request Error:', error);
+    },
+    retry: retryOptions.retryCount ?? 3, // Default retry count
+    retryDelay: retryOptions.retryDelay ?? 1000, // Default retry delay
+    onMutate: () => {
+      // Optionally, handle optimistic updates before the request completes
+      if (optimisticUpdate) {
+        optimisticUpdate();
       }
     }
-  );
+  });
 
   return {
     submitData: mutation.mutate,
