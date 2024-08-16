@@ -1,249 +1,186 @@
-Custom React API Library
-A custom React library providing enhanced hooks for API requests. This library offers hooks for performing GET, POST, PUT, and DELETE requests with advanced features including pagination, caching, and data transformation.
 
-Features
-GET Requests: Advanced GET requests with support for multiple URLs, pagination, and caching.
-POST Requests: Perform POST requests with options for optimistic updates and cache invalidation.
-PUT Requests: Handle PUT requests with custom retry and caching strategies.
-DELETE Requests: Support DELETE operations with similar advanced features as POST and PUT.
-Customizable: Extensive options for headers, interceptors, and data transformation.
+# react-api-handling
+
+Prerequisites
+To use the react-api-handling library, you'll need to have the following installed on your development environment:
+
+Node.js: Ensure that Node.js (v14 or higher) is installed. This is required to run the JavaScript runtime and package manager (npm or yarn).
+
+Download Node.js
+npm or Yarn: A package manager is necessary to install the library and its dependencies. npm comes with Node.js, but you can also use Yarn if preferred.
+
+Install npm
+Install Yarn
+React: The react-api-handling library is designed to work with React. Make sure you have a React project set up.
+
+Create a React app with Create React App if you don't have a React project already.
+Basic Knowledge of React: Familiarity with React and its component-based architecture will help you integrate and use this library effectively.
+
+React Documentation
+With these prerequisites in place, you’ll be ready to install and use the react-api-handling library in your React project.
+
+
+## Installation
+
 Installation
-Install the library via npm or yarn:
+To get started with the react-api-handling library, follow these steps to install it in your React project:
 
-sh
-Copy code
-npm install custom-library
-or
+Using npm
+Open your terminal and navigate to your React project directory.
 
-sh
-Copy code
-yarn add custom-library
-Usage
-useGet
-The useGet hook allows for performing GET requests with support for multiple URLs, pagination, and advanced caching.
+Install the react-api-handling library using npm:
 
-Basic Example
-jsx
-Copy code
+```bash
+  npm install react-api-handling
+```
+    
+Using Yarn
+Open your terminal and navigate to your React project directory.
+
+Install the react-api-handling library using Yarn:    
+
+```bash
+ yarn add react-api-handling
+```
+## Demo
+
+```bash
+  import { useGet } from 'react-api-handling';
+```
+```bash
 import React from 'react';
-import { useGet } from 'custom-library';
+import { useApi } from 'react-api-handling';
 
 const MyComponent = () => {
-  const { data, isLoading, error } = useGet(
-    'https://api.example.com/data',
-    { param1: 'value1' },
-    { 'Authorization': 'Bearer token' },
-    { enabled: true }
-  );
+  const { data, error, loading } = useApi('https://api.example.com/data');
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
-  return <div>Data: {JSON.stringify(data)}</div>;
-};
-Advanced Example with Pagination
-jsx
-Copy code
-import React from 'react';
-import { useGet } from 'custom-library';
-
-const PaginatedComponent = () => {
-  const { data, isLoading, error, fetchData } = useGet(
-    'https://api.example.com/data',
-    { param1: 'value1' },
-    { 'Authorization': 'Bearer token' },
-    { enabled: true },
-    { isInfinite: true, getNextPageParam: (lastPage) => lastPage.nextPage ?? false }
-  );
-
-  if (isLoading) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div>
-      <button onClick={fetchData}>Load More</button>
-      <div>Data: {JSON.stringify(data)}</div>
+      <h1>Data:</h1>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 };
-usePost
-The usePost hook allows for performing POST requests with options for optimistic updates and query invalidation.
 
-Basic Example
-jsx
-Copy code
+export default MyComponent;
+```
+## Documentation
+
+```react-api-handling``` provides custom hooks to simplify 
+ API interactions in React. 
+ 
+ This documentation covers the usage of the useGet, usePost, usePut, and useDelete hooks.
+
+
+```import { useDelete } from 'react-api-handling'```
+
+### Function Signature
+
+```bash 
+  const {
+  delete,
+  error,
+  isLoading,
+  isSuccess,
+  data
+} = useDelete(
+  apiUrlWithEndpoint,
+  headers = {},
+  queryKey = null,
+  cacheOptions = {},
+  interceptors = {},
+  retryOptions = {},
+  optimisticUpdate = null
+); 
+
+```
+
+
+####  Parameters 
+
+```apiUrlWithEndpoint (string)``` :  The full URL for the API including the endpoint. This is required.
+
+```headers (Object, optional)``` : Optional headers to include in the DELETE request.
+
+```queryKey (string | null, optional)``` : Optional query key to invalidate the cache upon a successful request. This helps keep the data in sync with the server.
+
+```cacheOptions (Object, optional)``` : Custom options for cache and stale time. This allows fine-tuning of caching behavior.
+
+```interceptors (Object, optional)``` : Contains request and response interceptors. Functions to modify the request before it is sent and handle the response after it is received.
+
+```retryOptions (Object, optional)``` : Custom retry and backoff strategies. Includes:
+
+```retryCount (number)``` : Number of retry attempts. Default is 3.
+
+```retryDelay (number)``` : Delay between retries in milliseconds. Default is 1000.
+
+```optimisticUpdate (function, optional)``` : Function for optimistic updates. This function will be called before the DELETE request completes to update the UI immediately.
+
+#### Returns
+
+The hook returns an object with the following properties:
+
+```delete (function)``` : Function to trigger the DELETE request. Call this with the parameters needed for the request.
+
+```error (Error | null)``` : Contains error information if the request fails.
+
+```isLoading (boolean)``` : true if the request is in progress, otherwise false.
+
+```isSuccess (boolean)``` : true if the request was successful, otherwise false.
+
+```data (any)```: Response data from the API if the request was successful.
+
+#### Example Usage 
+
+```
 import React from 'react';
-import { usePost } from 'custom-library';
+import { useDelete } from 'react-api-handling';
 
-const SubmitComponent = () => {
-  const { submitData, isLoading, error, isSuccess } = usePost(
-    'https://api.example.com/data',
+const MyComponent = () => {
+  const {
+    delete: deleteItem,
+    error,
+    isLoading,
+    isSuccess,
+    data
+  } = useDelete(
+    'https://your-secure-api.com/api/delete',
     { 'Authorization': 'Bearer token' },
-    'data-query-key', // Invalidate this query upon success
-    {},
-    {},
-    {},
-    (data) => console.log('Optimistic update:', data)
+    'myQueryKey',
+    { staleTime: 5000 },
+    {
+      request: (req) => {
+        // Modify request
+        return req;
+      },
+      response: (res) => {
+        // Handle response
+        return res;
+      }
+    },
+    {
+      retryCount: 5,
+      retryDelay: 2000
+    },
+    (data) => {
+      // Optimistic update function
+      console.log('Optimistic update:', data);
+    }
   );
 
-  const handleSubmit = () => {
-    submitData({ key: 'value' });
-  };
+  if (isLoading) return <p>Deleting...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (isSuccess) return <p>Deleted successfully! Data: {JSON.stringify(data)}</p>;
 
   return (
     <div>
-      <button onClick={handleSubmit} disabled={isLoading}>
-        Submit
-      </button>
-      {isSuccess && <div>Submission successful!</div>}
-      {error && <div>Error: {error.message}</div>}
+      <button onClick={() => deleteItem({ id: 1 })}>Delete Item</button>
     </div>
   );
 };
-usePut
-The usePut hook allows for performing PUT requests with options similar to usePost.
 
-Basic Example
-jsx
-Copy code
-import React from 'react';
-import { usePut } from 'custom-library';
-
-const UpdateComponent = () => {
-  const { updateData, isLoading, error, isSuccess } = usePut(
-    'https://api.example.com/data/1',
-    { 'Authorization': 'Bearer token' },
-    'data-query-key', // Invalidate this query upon success
-    {},
-    {},
-    {},
-    (data) => console.log('Optimistic update:', data)
-  );
-
-  const handleUpdate = () => {
-    updateData({ key: 'newValue' });
-  };
-
-  return (
-    <div>
-      <button onClick={handleUpdate} disabled={isLoading}>
-        Update
-      </button>
-      {isSuccess && <div>Update successful!</div>}
-      {error && <div>Error: {error.message}</div>}
-    </div>
-  );
-};
-useDelete
-The useDelete hook allows for performing DELETE requests with support for optimistic updates and query invalidation.
-
-Basic Example
-jsx
-Copy code
-import React from 'react';
-import { useDelete } from 'custom-library';
-
-const DeleteComponent = () => {
-  const { delete: deleteData, isLoading, error, isSuccess } = useDelete(
-    'https://api.example.com/data/1',
-    { 'Authorization': 'Bearer token' },
-    'data-query-key', // Invalidate this query upon success
-    {},
-    {},
-    {},
-    () => console.log('Optimistic update: item deleted')
-  );
-
-  const handleDelete = () => {
-    deleteData();
-  };
-
-  return (
-    <div>
-      <button onClick={handleDelete} disabled={isLoading}>
-        Delete
-      </button>
-      {isSuccess && <div>Deletion successful!</div>}
-      {error && <div>Error: {error.message}</div>}
-    </div>
-  );
-};
-API
-useGet(apiUrlsWithEndpoints, params, headers, queryOptions, paginationOptions, cacheOptions, interceptors, transformData, retryOptions)
-Parameters:
-apiUrlsWithEndpoints (string | string[]): The URL(s) for the API including the endpoint(s).
-params (Object): Optional query parameters.
-headers (Object): Optional headers.
-queryOptions (Object): Optional configuration for the query.
-paginationOptions (Object): Options for pagination or infinite queries.
-cacheOptions (Object): Custom cache and stale time options.
-interceptors (Object): Request and response interceptors.
-transformData (function): Function to transform or normalize the fetched data.
-retryOptions (Object): Custom retry and backoff strategies.
-Returns:
-An object with:
-
-fetchData (function): Function to trigger a refetch.
-error (Error | null): Error object, if any.
-isLoading (boolean): True if loading.
-isSuccess (boolean): True if successful.
-data (any): The fetched data.
-usePost(apiUrlWithEndpoint, headers, queryKey, cacheOptions, interceptors, retryOptions, optimisticUpdate)
-Parameters:
-apiUrlWithEndpoint (string): The URL for the API including the endpoint.
-headers (Object): Optional headers.
-queryKey (string | null): Query key to invalidate upon success.
-cacheOptions (Object): Custom cache and stale time options.
-interceptors (Object): Request and response interceptors.
-retryOptions (Object): Custom retry and backoff strategies.
-optimisticUpdate (function): Function for optimistic updates.
-Returns:
-An object with:
-
-submitData (function): Function to trigger the POST request.
-error (Error | null): Error object, if any.
-isLoading (boolean): True if loading.
-isSuccess (boolean): True if successful.
-data (any): The response data.
-usePut(apiUrlWithEndpoint, headers, queryKey, cacheOptions, interceptors, retryOptions, optimisticUpdate)
-Parameters:
-apiUrlWithEndpoint (string): The URL for the API including the endpoint.
-headers (Object): Optional headers.
-queryKey (string | null): Query key to invalidate upon success.
-cacheOptions (Object): Custom cache and stale time options.
-interceptors (Object): Request and response interceptors.
-retryOptions (Object): Custom retry and backoff strategies.
-optimisticUpdate (function): Function for optimistic updates.
-Returns:
-An object with:
-
-updateData (function): Function to trigger the PUT request.
-error (Error | null): Error object, if any.
-isLoading (boolean): True if loading.
-isSuccess (boolean): True if successful.
-data (any): The response data.
-useDelete(apiUrlWithEndpoint, headers, queryKey, cacheOptions, interceptors, retryOptions, optimisticUpdate)
-Parameters:
-apiUrlWithEndpoint (string): The URL for the API including the endpoint.
-headers (Object): Optional headers.
-queryKey (string | null): Query key to invalidate upon success.
-cacheOptions (Object): Custom cache and stale time options.
-interceptors (Object): Request and response interceptors.
-retryOptions (Object): Custom retry and backoff strategies.
-optimisticUpdate (function): Function for optimistic updates.
-Returns:
-An object with:
-
-delete (function): Function to trigger the DELETE request.
-error (Error | null): Error object, if any.
-isLoading (boolean): True if loading.
-isSuccess (boolean): True if successful.
-data (any): The response data.
-Contributing
-If you'd like to contribute to the library, follow these steps:
-
-Fork the repository.
-Create a feature branch (git checkout -b feature/YourFeature).
-Commit your changes (git commit -am 'Add new feature').
-Push to the branch (git push origin feature/YourFeature).
-Create a new Pull Request.
+export default MyComponent;
+```
