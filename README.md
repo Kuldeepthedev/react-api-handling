@@ -242,6 +242,20 @@ export default MyComponent;
 ```retryCount (number)```: Number of retry attempts. Default is 3.
 retryDelay (number): Delay between retries in milliseconds. Default is 1000. 
 
+#### Returns 
+
+The hook returns an object with the following properties:
+
+```fetchData (function)```: Function to trigger the refetch of data. This is useful for manual refreshes.
+
+```error (Error | null)```: Contains error information if the request fails.
+
+```isLoading (boolean)```: true if the request is in progress, otherwise false.
+
+```isSuccess (boolean)```: true if the request was successful, otherwise false.
+
+```data (any)```: Response data from the API if the request was successful.
+
 #### Example Usage 
 
 ##### Single URL with Basic Query
@@ -351,3 +365,331 @@ const MyComponent = () => {
 
 export default MyComponent;
 ```
+
+
+
+
+```import { usePost } from 'react-api-handling'```
+
+### Function Signature
+
+```javascript 
+const {
+  submitData,
+  error,
+  isLoading,
+  isSuccess,
+  data
+} = usePost(
+  apiUrlWithEndpoint,
+  headers = {},
+  queryKey = null,
+  cacheOptions = {},
+  interceptors = {},
+  retryOptions = {},
+  optimisticUpdate = null
+);
+
+
+```
+
+
+####  Parameters 
+
+```apiUrlWithEndpoint (`string`)```: The full URL for the API including the endpoint. This is required.
+
+```headers (Object, optional)```: Optional headers to include in the POST request.
+
+```queryKey (string | null, optional)```: Optional query key to invalidate the cache upon a successful request. This helps keep the data in sync with the server.
+
+```cacheOptions (Object, optional)```: Custom cache and stale time options. Includes:
+
+```cacheTime (number)```: Time (in milliseconds) to keep the data in cache.
+
+```staleTime (number)```: Time (in milliseconds) after which the data is considered stale.
+
+```interceptors (Object, optional)```: Contains request and response interceptors. Functions to modify the request before it is sent and handle the response after it is received.
+
+```retryOptions (Object, optional)```: Custom retry and backoff strategies. Includes:
+
+```retryCount (number)```: Number of retry attempts. Default is 3.
+
+```retryDelay (number)```: Delay between retries in milliseconds. Default is 1000.
+
+```optimisticUpdate (function, optional)```: Function for optimistic updates. This function will be called before the POST request completes to update the UI immediately.
+
+#### Returns 
+
+The hook returns an object with the following properties:
+
+```submitData (function)```: Function to trigger the POST request. Call this with the data payload you want to send.
+
+```error (Error | null)```: Contains error information if the request fails.
+
+````isLoading (boolean)```: true if the request is in progress, otherwise false.
+
+```isSuccess (boolean)```: true if the request was successful, otherwise false.
+
+```data (any)```: Response data from the API if the request was successful.
+#### Example Usage 
+
+##### Basic POST Request
+
+```javascript
+import React, { useState } from 'react';
+import { usePost } from 'react-api-handling';
+
+const MyComponent = () => {
+  const [formData, setFormData] = useState({ name: '' });
+
+  const {
+    submitData,
+    error,
+    isLoading,
+    isSuccess,
+    data
+  } = usePost('https://your-secure-api.com/api/post', { 'Authorization': 'Bearer token' });
+
+  const handleSubmit = async () => {
+    await submitData(formData);
+  };
+
+  if (isLoading) return <p>Submitting...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (isSuccess) return <p>Success! Data: {JSON.stringify(data)}</p>;
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={formData.name}
+        onChange={(e) => setFormData({ name: e.target.value })}
+        placeholder="Enter name"
+      />
+      <button onClick={handleSubmit}>Submit</button>
+    </div>
+  );
+};
+
+export default MyComponent;
+
+```
+
+
+##### Using Optimistic Updates
+
+```javascript
+import React, { useState } from 'react';
+import { usePost } from 'react-api-handling';
+
+const MyComponent = () => {
+  const [formData, setFormData] = useState({ name: '' });
+
+  const {
+    submitData,
+    error,
+    isLoading,
+    isSuccess,
+    data
+  } = usePost(
+    'https://your-secure-api.com/api/post',
+    { 'Authorization': 'Bearer token' },
+    null,
+    {},
+    {},
+    {},
+    (newData) => {
+      console.log('Optimistic update:', newData);
+    }
+  );
+
+  const handleSubmit = async () => {
+    await submitData(formData);
+  };
+
+  if (isLoading) return <p>Submitting...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (isSuccess) return <p>Success! Data: {JSON.stringify(data)}</p>;
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={formData.name}
+        onChange={(e) => setFormData({ name: e.target.value })}
+        placeholder="Enter name"
+      />
+      <button onClick={handleSubmit}>Submit</button>
+    </div>
+  );
+};
+
+export default MyComponent;
+
+
+
+```
+
+
+
+```import { usePut } from 'react-api-handling'```
+
+### Function Signature
+
+```javascript 
+const {
+  updateData,
+  error,
+  isLoading,
+  isSuccess,
+  data
+} = usePut(
+  apiUrlWithEndpoint,
+  headers = {},
+  queryKey = null,
+  cacheOptions = {},
+  interceptors = {},
+  retryOptions = {},
+  optimisticUpdate = null
+);
+
+
+```
+
+
+####  Parameters 
+
+```apiUrlWithEndpoint (`string`)```: The full URL for the API including the endpoint. This is required.
+
+```headers (Object, optional)```: Optional headers to include in the POST request.
+
+```queryKey (string | null, optional)```: Optional query key to invalidate the cache upon a successful request. This helps keep the data in sync with the server.
+
+```cacheOptions (Object, optional)```: Custom cache and stale time options. Includes:
+
+```cacheTime (number)```: Time (in milliseconds) to keep the data in cache.
+
+```staleTime (number)```: Time (in milliseconds) after which the data is considered stale.
+
+```interceptors (Object, optional)```: Contains request and response interceptors. Functions to modify the request before it is sent and handle the response after it is received.
+
+```retryOptions (Object, optional)```: Custom retry and backoff strategies. Includes:
+
+```retryCount (number)```: Number of retry attempts. Default is 3.
+
+```retryDelay (number)```: Delay between retries in milliseconds. Default is 1000.
+
+```optimisticUpdate (function, optional)```: Function for optimistic updates. This function will be called before the POST request completes to update the UI immediately.
+
+#### Returns 
+
+The hook returns an object with the following properties:
+
+```submitData (function)```: Function to trigger the POST request. Call this with the data payload you want to send.
+
+```error (Error | null)```: Contains error information if the request fails.
+
+````isLoading (boolean)```: true if the request is in progress, otherwise false.
+
+```isSuccess (boolean)```: true if the request was successful, otherwise false.
+
+```data (any)```: Response data from the API if the request was successful.
+#### Example Usage 
+
+##### Basic PUT Request
+
+```javascript
+import React, { useState } from 'react';
+import { usePut } from 'react-api-handling;
+
+const MyComponent = () => {
+  const [formData, setFormData] = useState({ id: 1, name: '' });
+
+  const {
+    updateData,
+    error,
+    isLoading,
+    isSuccess,
+    data
+  } = usePut('https://your-secure-api.com/api/put', { 'Authorization': 'Bearer token' });
+
+  const handleSubmit = async () => {
+    await updateData(formData);
+  };
+
+  if (isLoading) return <p>Updating...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (isSuccess) return <p>Success! Data: {JSON.stringify(data)}</p>;
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={formData.name}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+        placeholder="Enter name"
+      />
+      <button onClick={handleSubmit}>Update</button>
+    </div>
+  );
+};
+
+export default MyComponent;
+
+
+```
+
+
+##### Using Optimistic Updates
+
+```javascript
+import React, { useState } from 'react';
+import { usePut } from 'react-api-handling';
+
+const MyComponent = () => {
+  const [formData, setFormData] = useState({ id: 1, name: '' });
+
+  const {
+    updateData,
+    error,
+    isLoading,
+    isSuccess,
+    data
+  } = usePut(
+    'https://your-secure-api.com/api/put',
+    { 'Authorization': 'Bearer token' },
+    null,
+    {},
+    {},
+    {},
+    (updatedData) => {
+      console.log('Optimistic update:', updatedData);
+    }
+  );
+
+  const handleSubmit = async () => {
+    await updateData(formData);
+  };
+
+  if (isLoading) return <p>Updating...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (isSuccess) return <p>Success! Data: {JSON.stringify(data)}</p>;
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={formData.name}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+        placeholder="Enter name"
+      />
+      <button onClick={handleSubmit}>Update</button>
+    </div>
+  );
+};
+
+export default MyComponent;
+
+
+```
+
