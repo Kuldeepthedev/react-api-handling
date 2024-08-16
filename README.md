@@ -72,6 +72,22 @@ export default MyComponent;
 ```react-api-handling``` provides custom hooks to simplify 
  API interactions in React. 
  
+## Update index.js in your react app 
+
+```javascrript 
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { QueryClientProvider } from 'react-api-handling'; // Import from  library
+
+// Wrap your App component with QueryClientProvider
+ReactDOM.render(
+  <QueryClientProvider>
+    <App />
+  </QueryClientProvider>,
+  document.getElementById('root')
+);
+```
  This documentation covers the usage of the useGet, usePost, usePut, and useDelete hooks.
 
 import { useDelete } from 'react-api-handling'; ```
