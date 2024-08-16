@@ -1,4 +1,4 @@
-import apiClient from './apiClient';
+import { createApiClient } from './apiClient';
 
 /**
  * Makes an API request using the provided method, endpoint, data, headers, and params.
@@ -13,10 +13,10 @@ import apiClient from './apiClient';
  */
 export const apiRequest = async (method, endpoint, data = {}, headers = {}, params = {}, apiUrl = '') => {
   try {
-    const url = apiUrl ? `${apiUrl}${endpoint}` : endpoint;
+    const apiClient = createApiClient(apiUrl); // Create apiClient with dynamic base URL
     const response = await apiClient({
       method,
-      url,
+      url: endpoint, // Endpoint is relative to baseURL
       data,
       headers,
       params,
