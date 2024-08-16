@@ -8617,6 +8617,7 @@ var useDelete = function useDelete(apiUrlWithEndpoint) {
   var interceptors = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
   var retryOptions = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
   var optimisticUpdate = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
+  var authToken = arguments.length > 7 ? arguments[7] : undefined;
   var queryClient = useQueryClient();
   var mutation = useMutation({
     mutationFn: function () {
@@ -8625,7 +8626,7 @@ var useDelete = function useDelete(apiUrlWithEndpoint) {
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              request = apiRequest('DELETE', apiUrlWithEndpoint, {}, headers, params);
+              request = apiRequest('DELETE', apiUrlWithEndpoint, {}, headers, params, authToken);
               if (interceptors.request) {
                 request = interceptors.request(request);
               }

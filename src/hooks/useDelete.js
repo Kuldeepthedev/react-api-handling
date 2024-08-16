@@ -20,13 +20,14 @@ export const useDelete = (
   cacheOptions = {},
   interceptors = {},
   retryOptions = {},
-  optimisticUpdate = null
+  optimisticUpdate = null,
+  authToken
 ) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async (params) => {
-      let request = apiRequest('DELETE', apiUrlWithEndpoint, {}, headers, params);
+      let request = apiRequest('DELETE', apiUrlWithEndpoint, {}, headers, params,authToken);
       if (interceptors.request) {
         request = interceptors.request(request);
       }
